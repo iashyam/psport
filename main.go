@@ -22,16 +22,19 @@ type portEntry struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("usage: psport [-q|--quiet] <port>")
+		fmt.Println("usage: psport [-q|--quiet] [-f|--free] <port>")
 		os.Exit(1)
 	}
 
 	quiet := false
+	free := false
 	var portArg string
 	for _, arg := range os.Args[1:] {
 		switch arg {
 		case "-q", "--quiet":
 			quiet = true
+		case "-f", "--free":
+			free = true
 		default:
 			portArg = arg
 		}
@@ -56,12 +59,16 @@ func main() {
 		return
 	}
 
-	if quiet {
+	if quiet && !free {
 		printPIDs(entries)
 		return
 	}
 
 	printTable(entries)
+
+	if free {
+		freeProcesses(entries)
+	}
 }
 
 func lookupPort(port int) ([]portEntry, error) {
@@ -115,6 +122,41 @@ func lookupPort(port int) ([]portEntry, error) {
 	}
 
 	return entries, scanner.Err()
+}
+
+func freeProcesses(entries []portEntry) {
+	type proc struct{ pid, command string }
+	var procs []proc
+	seen := make(map[string]bool)
+	for _, e := range entries {
+		if seen[e.PID] {
+			continue
+		}
+		seen[e.PID] = true
+		procs = append(procs, proc{pid: e.PID, command: e.Command})
+	}
+
+	noun := "process"
+	if len(procs) > 1 {
+		noun = "processes"
+	}
+	fmt.Printf("\nKill %d %s and free the port? [y/N]: ", len(procs), noun)
+
+	reader := bufio.NewReader(os.Stdin)
+	answer, _ := reader.ReadString('\n')
+	answer = strings.ToLower(strings.TrimSpace(answer))
+	if answer != "y" && answer != "yes" {
+		fmt.Println("aborted, nothing killed")
+		return
+	}
+
+	for _, p := range procs {
+		if err := exec.Command("kill", p.pid).Run(); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to kill PID %s (%s): %v\n", p.pid, p.command, err)
+			continue
+		}
+		fmt.Printf("killed PID %s (%s)\n", p.pid, p.command)
+	}
 }
 
 func printPIDs(entries []portEntry) {
