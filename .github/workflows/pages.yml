@@ -1,0 +1,64 @@
+name: Deploy README to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - README.md
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Render README to HTML
+        run: |
+          mkdir -p _site
+          cp .github/pages/style.css _site/style.css
+          npx --yes marked README.md > _site/body.html
+          {
+            echo '<!doctype html>'
+            echo '<html lang="en">'
+            echo '<head>'
+            echo '<meta charset="utf-8">'
+            echo '<meta name="viewport" content="width=device-width, initial-scale=1">'
+            echo '<title>psport</title>'
+            echo '<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%8C</text></svg>">'
+            echo '<link rel="stylesheet" href="style.css">'
+            echo '</head>'
+            echo '<body>'
+            cat _site/body.html
+            echo '</body>'
+            echo '</html>'
+          } > _site/index.html
+          rm _site/body.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
