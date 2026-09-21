@@ -35,7 +35,7 @@ sudo mv psport /usr/local/bin/   # or any dir on your $PATH
 ## Usage
 
 ```bash
-psport [-q|--quiet] <port>
+psport [-q|--quiet] [-f|--free] <port>
 ```
 
 Example:
@@ -60,6 +60,21 @@ $ kill $(psport -q 3000)
 ```
 
 On an empty port, quiet mode prints nothing and exits cleanly.
+
+### Free mode
+
+`-f`/`--free` prints the table, then asks a single confirmation before killing every process listening on the port:
+
+```bash
+$ psport -f 3000
+COMMAND  PID   USER   PROTO  ADDRESS          STATE
+node     1234  shyam  TCP    *:3000           LISTEN
+
+Kill 1 process and free the port? [y/N]: y
+killed PID 1234 (node)
+```
+
+Answering anything other than `y`/`yes` aborts and kills nothing.
 
 ## Requirements
 
