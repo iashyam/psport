@@ -1,6 +1,11 @@
 # psport binary
 psport
 
+# GitHub Pages build output and its local deps
+_site/
+node_modules/
+package-lock.json
+
 # If you prefer the allow list template instead of the deny list, see community template:
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #

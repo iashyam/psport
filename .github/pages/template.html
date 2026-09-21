@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>psport</title>
+<meta name="description" content="{{TAGLINE_TEXT}}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128268;</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">$ man psport</p>
+    <h1 class="title">psport<span class="dot">.</span></h1>
+    <p class="tagline">{{TAGLINE}}</p>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+        <span class="term-title">~</span>
+      </div>
+      <div class="term-body">
+        <div class="prompt">psport 3000</div>
+        <pre class="term-out"><span class="hd">COMMAND  PID   USER   PROTO  ADDRESS          STATE</span>
+node     1234  shyam  TCP    *:3000           <span class="state">LISTEN</span></pre>
+        <div class="prompt" style="margin-top: 0.9em">psport -f 3000<span class="cursor"></span></div>
+      </div>
+    </div>
+
+    <div class="install">
+      <code>go install github.com/iashyam/psport@latest</code>
+      <button type="button" id="install-copy" class="copy-btn" aria-label="Copy install command">
+        <svg class="icon-copy" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>
+        <svg class="icon-check" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="doc">
+{{CONTENT}}
+  </main>
+
+  <footer>
+{{FOOTER}}
+  </footer>
+</div>
+<script src="copy.js" defer></script>
+</body>
+</html>
