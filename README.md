@@ -35,7 +35,7 @@ sudo mv psport /usr/local/bin/   # or any dir on your $PATH
 ## Usage
 
 ```bash
-psport <port>
+psport [-q|--quiet] <port>
 ```
 
 Example:
@@ -47,6 +47,19 @@ node     1234  shyam  TCP    *:3000           LISTEN
 ```
 
 If nothing is listening on the port, it prints a message and exits cleanly.
+
+### Quiet mode
+
+`-q`/`--quiet` prints just the PID(s), one per line, no header — handy for piping into `kill`:
+
+```bash
+$ psport -q 3000
+1234
+
+$ kill $(psport -q 3000)
+```
+
+On an empty port, quiet mode prints nothing and exits cleanly.
 
 ## Requirements
 

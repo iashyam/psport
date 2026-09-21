@@ -22,13 +22,24 @@ type portEntry struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("usage: psport <port>")
+		fmt.Println("usage: psport [-q|--quiet] <port>")
 		os.Exit(1)
 	}
 
-	port, err := strconv.Atoi(os.Args[1])
+	quiet := false
+	var portArg string
+	for _, arg := range os.Args[1:] {
+		switch arg {
+		case "-q", "--quiet":
+			quiet = true
+		default:
+			portArg = arg
+		}
+	}
+
+	port, err := strconv.Atoi(portArg)
 	if err != nil {
-		fmt.Println("invalid port:", os.Args[1])
+		fmt.Println("invalid port:", portArg)
 		os.Exit(1)
 	}
 
@@ -39,7 +50,14 @@ func main() {
 	}
 
 	if len(entries) == 0 {
-		fmt.Printf("nothing listening on port %d\n", port)
+		if !quiet {
+			fmt.Printf("nothing listening on port %d\n", port)
+		}
+		return
+	}
+
+	if quiet {
+		printPIDs(entries)
 		return
 	}
 
@@ -97,6 +115,17 @@ func lookupPort(port int) ([]portEntry, error) {
 	}
 
 	return entries, scanner.Err()
+}
+
+func printPIDs(entries []portEntry) {
+	seen := make(map[string]bool)
+	for _, e := range entries {
+		if seen[e.PID] {
+			continue
+		}
+		seen[e.PID] = true
+		fmt.Println(e.PID)
+	}
 }
 
 func printTable(entries []portEntry) {
