@@ -84,3 +84,7 @@ Answering anything other than `y`/`yes` aborts and kills nothing.
 ## How it works
 
 `psport` shells out to `lsof -nP -i :<port> -F pcuLPnT`, parses its machine-readable field output, and renders it as an aligned table.
+
+---
+
+Source at [github.com/iashyam/psport](https://github.com/iashyam/psport) · made by [iashyam](https://github.com/iashyam)

@@ -6,6 +6,7 @@ on:
     paths:
       - README.md
       - .github/workflows/pages.yml
+      - .github/pages/**
   workflow_dispatch:
 
 permissions:
@@ -31,6 +32,7 @@ jobs:
         run: |
           mkdir -p _site
           cp .github/pages/style.css _site/style.css
+          cp .github/pages/copy.js _site/copy.js
           npx --yes marked README.md > _site/body.html
           {
             echo '<!doctype html>'
@@ -44,6 +46,7 @@ jobs:
             echo '</head>'
             echo '<body>'
             cat _site/body.html
+            echo '<script defer src="copy.js"></script>'
             echo '</body>'
             echo '</html>'
           } > _site/index.html

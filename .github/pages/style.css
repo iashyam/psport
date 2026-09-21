@@ -30,7 +30,8 @@
 * { box-sizing: border-box; }
 
 body {
-  margin: 0;
+  max-width: 42rem;
+  margin: 0 auto;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
@@ -38,12 +39,6 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   padding: 4.5rem 1.5rem 5rem;
-}
-
-body > * {
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 h1, h2, h3, h4 {
@@ -101,6 +96,7 @@ code {
 }
 
 pre {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: 2px solid var(--accent-2);
@@ -118,6 +114,30 @@ pre code {
   color: var(--text);
 }
 
+/* copy button injected by script.js into every <pre> */
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+pre:hover .copy-btn,
+.copy-btn:focus-visible {
+  opacity: 1;
+}
+.copy-btn:hover { color: var(--text); background: var(--accent-soft); }
+.copy-btn[data-copied="true"] { opacity: 1; color: var(--accent-2); }
+
 ul, ol {
   padding-left: 1.3em;
   margin: 0 0 1rem;
@@ -129,6 +149,12 @@ hr {
   border: none;
   border-top: 1px solid var(--border);
   margin: 2.5rem 0;
+}
+
+/* content after the final hr is the footer (source link + credit) */
+hr:last-of-type ~ p {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 table {
@@ -153,4 +179,5 @@ strong { color: var(--text); }
 
 @media (max-width: 30rem) {
   body { padding: 3rem 1.25rem 4rem; }
+  .copy-btn { opacity: 1; }
 }
